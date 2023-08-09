@@ -2,6 +2,8 @@ package MovieGUIFrame;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class MainGUIFrame extends JFrame {
 
@@ -81,6 +83,15 @@ public class MainGUIFrame extends JFrame {
         frame.add(selectMovie);
 
         frame.setVisible(true);
+
+        favoriteBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.setVisible(false);
+                new favoriteGUIFrame();
+
+            }
+        });
     }
 
     //run 했을때 실행순서가 시작되는 main 메소드
