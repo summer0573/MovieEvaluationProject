@@ -62,6 +62,9 @@ public class MainGUIFrame extends JFrame {
         JButton searchBtn = new JButton(changeIcon);
         searchBtn.setBounds(880, 40, 50, 50);
 
+        JButton imformationBtn = new JButton("나의 영화 정보");
+        imformationBtn.setBounds(670, 480, 120, 50);
+
         JButton favoriteBtn = new JButton("나의 즐겨찾기");
         favoriteBtn.setBounds(805, 480, 120, 50);
 
@@ -77,6 +80,7 @@ public class MainGUIFrame extends JFrame {
 
         selectMovie.add(select);
         selectMovie.add(searchBtn);
+        selectMovie.add(imformationBtn);
         selectMovie.add(favoriteBtn);
 
         frame.add(insertMovie);
@@ -89,6 +93,15 @@ public class MainGUIFrame extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 frame.setVisible(false);
                 new favoriteGUIFrame();
+
+            }
+        });
+
+        imformationBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.setVisible(false);
+                new imformationGUIFrame();
 
             }
         });
