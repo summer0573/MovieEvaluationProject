@@ -1,13 +1,18 @@
 package movieGUIFrame;
 
+import DTO.movieDto;
+import database.movieInsert;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 
 public class MainGUIFrame extends JFrame {
 
     ImageIcon img = new ImageIcon("src/img/Search_icon.png");
+    movieDto d = new movieDto(); //dto getset
 
     public MainGUIFrame() {
         //Frame
@@ -103,6 +108,13 @@ public class MainGUIFrame extends JFrame {
 
                 System.out.println(mttext + "     " + dtext + "     " + stext + "     " + ctext);
 
+                d.mname = mttext;
+                d.mdate = dtext;
+                d.mscore = stext;
+                d.mreview = ctext;
+
+                System.out.println(d.mname + "     " + d.mdate + "     " + d.mscore + "     " + d.mreview);
+
                 if(mttext.isEmpty()){
                     JOptionPane.showMessageDialog(dframe, "영화 제목을 입력하세요", "알림", JOptionPane.WARNING_MESSAGE);
                 }else if(dtext.isEmpty()){
@@ -113,6 +125,11 @@ public class MainGUIFrame extends JFrame {
                     JOptionPane.showMessageDialog(dframe, "한줄 감상문을 입력하세요", "알림", JOptionPane.WARNING_MESSAGE);
                 }
 
+                try {
+                    movieInsert mi = new movieInsert();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         });
 
