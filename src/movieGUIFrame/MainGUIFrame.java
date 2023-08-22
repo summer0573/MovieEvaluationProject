@@ -4,14 +4,17 @@ import DTO.movieDto;
 import database.movieInsert;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainGUIFrame extends JFrame {
-
     ImageIcon img = new ImageIcon("src/img/Search_icon.png");
+    ImageIcon img2 = new ImageIcon("src/img/table_update_icon.png");
     movieDto d = new movieDto(); //dto getset
 
     public MainGUIFrame() {
@@ -57,23 +60,6 @@ public class MainGUIFrame extends JFrame {
         JButton insertBtn = new JButton("등록");
         insertBtn.setBounds(375, 480, 100, 50);
 
-        JTextField select = new JTextField();
-        select.setBounds(553, 40, 330, 50);
-
-        Image imgage = img.getImage();
-        // 창의 사이즈인 500,500에 맞춰서 이미지를 변경
-        Image changeImg = imgage.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
-        ImageIcon changeIcon = new ImageIcon(changeImg);
-
-        JButton searchBtn = new JButton(changeIcon);
-        searchBtn.setBounds(880, 40, 50, 50);
-
-        JButton imformationBtn = new JButton("나의 영화 정보");
-        imformationBtn.setBounds(670, 480, 120, 50);
-
-        JButton favoriteBtn = new JButton("나의 즐겨찾기");
-        favoriteBtn.setBounds(805, 480, 120, 50);
-
         insertMovie.add(MovieTitle);
         insertMovie.add(MovieDate);
         insertMovie.add(MovieScore);
@@ -84,15 +70,7 @@ public class MainGUIFrame extends JFrame {
         insertMovie.add(score);
         insertMovie.add(comment);
 
-        selectMovie.add(select);
-        selectMovie.add(searchBtn);
-        selectMovie.add(imformationBtn);
-        selectMovie.add(favoriteBtn);
-
         frame.add(insertMovie);
-        frame.add(selectMovie);
-
-        frame.setVisible(true);
 
         JFrame dframe = new JFrame("Dialog"); //다이얼로그 프레임
         dframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -133,6 +111,92 @@ public class MainGUIFrame extends JFrame {
             }
         });
 
+        //----------------------------selectpanel V
+
+        JTextField select = new JTextField();
+        select.setBounds(553, 40, 330, 50);
+
+        Image imgage = img.getImage();
+        // 창의 사이즈인 500,500에 맞춰서 이미지를 변경
+        Image changeImg = imgage.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+        ImageIcon changeIcon = new ImageIcon(changeImg);
+
+        Image imgage2 = img2.getImage();
+        // 창의 사이즈인 500,500에 맞춰서 이미지를 변경
+        Image changeImg2 = imgage2.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+        ImageIcon changeIcon2 = new ImageIcon(changeImg2);
+
+        JButton searchBtn = new JButton(changeIcon); //검색버튼
+        searchBtn.setBounds(880, 40, 50, 50);
+
+        JButton tableUpdateBtn = new JButton(changeIcon2); //테이블 새로고침 버튼
+        tableUpdateBtn.setBounds(930, 490, 30, 30);
+
+        JButton imformationBtn = new JButton("나의 영화 정보");
+        imformationBtn.setBounds(670, 480, 120, 50);
+
+        JButton favoriteBtn = new JButton("나의 즐겨찾기");
+        favoriteBtn.setBounds(805, 480, 120, 50);
+
+        //JTable
+        String[] columnNames={"영화이름","관람날짜","평점","리뷰"};
+
+        //-------------------select----------------------------
+
+        String jdbcUrl = "jdbc:oracle:thin:@localhost:1521:XE"; // Oracle 데이터베이스 연결 URL
+        String username = "JHJ3111";
+        String password = "3111";
+
+        List<Object[]> data = new ArrayList<>();
+
+        try {
+            Connection connection = DriverManager.getConnection(jdbcUrl, username, password);
+
+            String selectQuery = "SELECT * FROM MOVIE";
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(selectQuery);
+
+            while (resultSet.next()) {
+                String name = resultSet.getString("name");
+                String mdate = resultSet.getString("mdate");
+                String grade = resultSet.getString("grade");
+                String review = resultSet.getString("review");
+
+                Object[] row = {name, mdate, grade, review};
+                data.add(row);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        // 데이터를 2차원 배열로 변환
+        Object[][] dataArray = new Object[data.size()][];
+        data.toArray(dataArray);
+
+//        // 데이터 출력 (테스트용)
+//        for (Object[] row : dataArray) {
+//            for (Object value : row) {
+//                System.out.print(value + "\t");
+//            }
+//            System.out.println();
+//        }
+
+        // 테이블 모델을 생성하고 isCellEditable을 재정의하여 특정 셀 수정 막기
+        DefaultTableModel tableModel = new DefaultTableModel(dataArray, columnNames) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                // 원하는 조건에 따라 수정 가능 여부 결정
+                return false; // 수정 불가능하도록 설정
+            }
+        };
+
+        //-----------------------------------------------
+
+        JTable movieTable = new JTable(tableModel);
+        JScrollPane movieScrollPane = new JScrollPane(movieTable);
+
+        movieScrollPane.setBounds(505, 100, 470, 355);
+
         favoriteBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -150,6 +214,17 @@ public class MainGUIFrame extends JFrame {
 
             }
         });
+
+        selectMovie.add(select);
+        selectMovie.add(searchBtn);
+        selectMovie.add(tableUpdateBtn);
+        selectMovie.add(imformationBtn);
+        selectMovie.add(favoriteBtn);
+        selectMovie.add(movieScrollPane);
+
+        frame.add(selectMovie);
+
+        frame.setVisible(true);
     }
 
     //run 했을때 실행순서가 시작되는 main 메소드
