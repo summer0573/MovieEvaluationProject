@@ -25,7 +25,7 @@ public class imformationGUIFrame {
 
         int max = sg.maxGroup();
         int min = sg.minGroup();
-        int avg = sg.avgGroup();
+        double avg = sg.avgGroup();
 
         JLabel minGrade = new JLabel("점수가 가장 높은 영화 : " + max);
         JLabel maxGrade = new JLabel("점수가 가장 낮은 영화 : " + min);
