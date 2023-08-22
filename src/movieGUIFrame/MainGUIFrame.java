@@ -14,7 +14,6 @@ import java.util.List;
 
 public class MainGUIFrame extends JFrame {
     ImageIcon img = new ImageIcon("src/img/Search_icon.png");
-    ImageIcon img2 = new ImageIcon("src/img/table_update_icon.png");
     movieDto d = new movieDto(); //dto getset
 
     public MainGUIFrame() {
@@ -76,6 +75,28 @@ public class MainGUIFrame extends JFrame {
         dframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         dframe.setSize(300, 200);
 
+
+        //----------------------------selectpanel V
+
+        JTextField select = new JTextField();
+        select.setBounds(553, 40, 330, 50);
+
+        Image imgage = img.getImage();
+        // 창의 사이즈인 500,500에 맞춰서 이미지를 변경
+        Image changeImg = imgage.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+        ImageIcon changeIcon = new ImageIcon(changeImg);
+
+        JButton searchBtn = new JButton(changeIcon); //검색버튼
+        searchBtn.setBounds(880, 40, 50, 50);
+
+        JButton imformationBtn = new JButton("나의 영화 정보");
+        imformationBtn.setBounds(670, 480, 120, 50);
+
+        JButton favoriteBtn = new JButton("나의 즐겨찾기");
+        favoriteBtn.setBounds(805, 480, 120, 50);
+
+        //-----------------------------------------------
+
         insertBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -103,6 +124,11 @@ public class MainGUIFrame extends JFrame {
                     JOptionPane.showMessageDialog(dframe, "한줄 감상문을 입력하세요", "알림", JOptionPane.WARNING_MESSAGE);
                 }
 
+                title.setText(""); // Clear the text field
+                date.setText(""); // Clear the text field
+                score.setText(""); // Clear the text field
+                comment.setText(""); // Clear the text field
+
                 try {
                     movieInsert mi = new movieInsert();
                 } catch (SQLException ex) {
@@ -111,32 +137,24 @@ public class MainGUIFrame extends JFrame {
             }
         });
 
-        //----------------------------selectpanel V
 
-        JTextField select = new JTextField();
-        select.setBounds(553, 40, 330, 50);
+        favoriteBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.setVisible(false);
+                new favoriteGUIFrame();
 
-        Image imgage = img.getImage();
-        // 창의 사이즈인 500,500에 맞춰서 이미지를 변경
-        Image changeImg = imgage.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
-        ImageIcon changeIcon = new ImageIcon(changeImg);
+            }
+        });
 
-        Image imgage2 = img2.getImage();
-        // 창의 사이즈인 500,500에 맞춰서 이미지를 변경
-        Image changeImg2 = imgage2.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
-        ImageIcon changeIcon2 = new ImageIcon(changeImg2);
+        imformationBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.setVisible(false);
+                new imformationGUIFrame();
 
-        JButton searchBtn = new JButton(changeIcon); //검색버튼
-        searchBtn.setBounds(880, 40, 50, 50);
-
-        JButton tableUpdateBtn = new JButton(changeIcon2); //테이블 새로고침 버튼
-        tableUpdateBtn.setBounds(930, 490, 30, 30);
-
-        JButton imformationBtn = new JButton("나의 영화 정보");
-        imformationBtn.setBounds(670, 480, 120, 50);
-
-        JButton favoriteBtn = new JButton("나의 즐겨찾기");
-        favoriteBtn.setBounds(805, 480, 120, 50);
+            }
+        });
 
         //JTable
         String[] columnNames={"영화이름","관람날짜","평점","리뷰"};
@@ -194,30 +212,10 @@ public class MainGUIFrame extends JFrame {
 
         JTable movieTable = new JTable(tableModel);
         JScrollPane movieScrollPane = new JScrollPane(movieTable);
-
         movieScrollPane.setBounds(505, 100, 470, 355);
-
-        favoriteBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                frame.setVisible(false);
-                new favoriteGUIFrame();
-
-            }
-        });
-
-        imformationBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                frame.setVisible(false);
-                new imformationGUIFrame();
-
-            }
-        });
 
         selectMovie.add(select);
         selectMovie.add(searchBtn);
-        selectMovie.add(tableUpdateBtn);
         selectMovie.add(imformationBtn);
         selectMovie.add(favoriteBtn);
         selectMovie.add(movieScrollPane);
