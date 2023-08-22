@@ -10,8 +10,8 @@ import java.sql.SQLException;
 public class movieUpdate {
     public movieUpdate() throws SQLException {
         String jdbcUrl = "jdbc:oracle:thin:@localhost:1521:XE"; // Oracle 데이터베이스 연결 URL
-        String username = "JHJ3111";
-        String password = "3111";
+        String username = "HR";
+        String password = "5678";
         movieDto d = new movieDto();
 
         try {

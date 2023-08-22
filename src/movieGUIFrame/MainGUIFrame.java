@@ -162,8 +162,8 @@ public class MainGUIFrame extends JFrame {
         //-------------------select----------------------------
 
         String jdbcUrl = "jdbc:oracle:thin:@localhost:1521:XE"; // Oracle 데이터베이스 연결 URL
-        String username = "JHJ3111";
-        String password = "3111";
+        String username = "HR";
+        String password = "5678";
 
         List<Object[]> data = new ArrayList<>();
 
