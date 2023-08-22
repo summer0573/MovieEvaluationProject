@@ -1,4 +1,4 @@
-package MovieGUIFrame;
+package movieGUIFrame;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,7 +28,8 @@ public class MainGUIFrame extends JFrame {
 
         //jlabel
         JLabel MovieTitle = new JLabel("영화 제목");
-        JLabel MovieDate = new JLabel("상영 날짜");
+        JLabel MovieDate = new JLabel("<html><body><center>관람 날짜" +
+                "<br>(yymmdd)</center></body></html>");
         JLabel MovieScore = new JLabel("<html><body><center>영화 평점" +
                 "<br>(1 ~ 5)</center></body></html>");
         JLabel MovieComment = new JLabel("영화에 대한 감상을 남겨주세요!");
@@ -38,7 +39,7 @@ public class MainGUIFrame extends JFrame {
         MovieComment.setBounds(25, 210, 500, 50);
 
         //jfield
-        JTextField title = new JTextField();
+        JTextField title = new JTextField(50);
         JTextField date = new JTextField();
         JTextField score = new JTextField();
         JTextArea comment = new JTextArea();
@@ -72,7 +73,7 @@ public class MainGUIFrame extends JFrame {
         insertMovie.add(MovieDate);
         insertMovie.add(MovieScore);
         insertMovie.add(MovieComment);
-        insertMovie.add(insertBtn);
+        insertMovie.add(insertBtn); //등록버튼
         insertMovie.add(title);
         insertMovie.add(date);
         insertMovie.add(score);
@@ -87,6 +88,33 @@ public class MainGUIFrame extends JFrame {
         frame.add(selectMovie);
 
         frame.setVisible(true);
+
+        JFrame dframe = new JFrame("Dialog"); //다이얼로그 프레임
+        dframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        dframe.setSize(300, 200);
+
+        insertBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String mttext = title.getText(); //title jfeild를 텍스트로 바꿈
+                String dtext = date.getText(); //date jfeild를 텍스트로 바꿈
+                String stext = score.getText(); //score jfeild를 텍스트로 바꿈
+                String ctext = comment.getText(); //comment jfeild를 텍스트로 바꿈
+
+                System.out.println(mttext + "     " + dtext + "     " + stext + "     " + ctext);
+
+                if(mttext.isEmpty()){
+                    JOptionPane.showMessageDialog(dframe, "영화 제목을 입력하세요", "알림", JOptionPane.WARNING_MESSAGE);
+                }else if(dtext.isEmpty()){
+                    JOptionPane.showMessageDialog(dframe, "관람 날짜를 입력하세요", "알림", JOptionPane.WARNING_MESSAGE);
+                }else if(stext.isEmpty()){
+                    JOptionPane.showMessageDialog(dframe, "평가 점수(n/5)를 입력하세요", "알림", JOptionPane.WARNING_MESSAGE);
+                }else if(ctext.isEmpty()){
+                    JOptionPane.showMessageDialog(dframe, "한줄 감상문을 입력하세요", "알림", JOptionPane.WARNING_MESSAGE);
+                }
+
+            }
+        });
 
         favoriteBtn.addActionListener(new ActionListener() {
             @Override

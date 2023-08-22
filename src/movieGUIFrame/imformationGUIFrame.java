@@ -1,4 +1,4 @@
-package MovieGUIFrame;
+package movieGUIFrame;
 
 import javax.swing.*;
 
