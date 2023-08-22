@@ -7,19 +7,21 @@ public class selectGroup {
     String username = "HR";
     String password = "5678";
 
-    public int maxGroup() {
+    public String maxGroup() {
         int max = 0;
+        String nameText = "";
         try{
             Class.forName("oracle.jdbc.driver.OracleDriver");
             try {
                 Connection connection = DriverManager.getConnection(jdbcUrl, username, password);
-                PreparedStatement preparedStatement = connection.prepareStatement("SELECT MAX(grade) FROM movie");
+                PreparedStatement preparedStatement = connection.prepareStatement("SELECT name, grade FROM movie WHERE grade = (SELECT MAX(grade) FROM movie)");
                 ResultSet resultSet = preparedStatement.executeQuery();
                     if (resultSet.next()) {
-                        max = resultSet.getInt(1); // 첫 번째 컬럼 값 가져오기
+                        nameText = resultSet.getString(1);
+                        max = resultSet.getInt(2); // 첫 번째 컬럼 값 가져오기
                     }
-                    System.out.println(max);
-                return max;
+                    System.out.println(nameText + "          " + max);
+                return nameText + " : " + max + "점";
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
@@ -29,19 +31,21 @@ public class selectGroup {
         }
     }
 
-    public int minGroup(){
+    public String minGroup(){
         int min = 0;
+        String nameText = "";
         try{
             Class.forName("oracle.jdbc.driver.OracleDriver");
             try {
                 Connection connection = DriverManager.getConnection(jdbcUrl, username, password);
-                PreparedStatement preparedStatement = connection.prepareStatement("SELECT MIN(grade) FROM movie");
+                PreparedStatement preparedStatement = connection.prepareStatement("SELECT name, grade FROM movie WHERE grade = (SELECT MIN(grade) FROM movie)");
                 ResultSet resultSet = preparedStatement.executeQuery();
                 if (resultSet.next()) {
-                    min = resultSet.getInt(1); // 첫 번째 컬럼 값 가져오기
+                    nameText = resultSet.getString(1);
+                    min = resultSet.getInt(2); // 첫 번째 컬럼 값 가져오기
                 }
-                System.out.println(min);
-                return min;
+                System.out.println(nameText + "          " + min);
+                return nameText + " : " + min + "점";
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
@@ -64,6 +68,28 @@ public class selectGroup {
                 }
                 System.out.println(avg);
                 return avg;
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public double sumGroup(){
+        double sum = 0;
+        try{
+            Class.forName("oracle.jdbc.driver.OracleDriver");
+            try {
+                Connection connection = DriverManager.getConnection(jdbcUrl, username, password);
+                PreparedStatement preparedStatement = connection.prepareStatement("SELECT SUM(grade) FROM movie");
+                ResultSet resultSet = preparedStatement.executeQuery();
+                if (resultSet.next()) {
+                    sum = resultSet.getDouble(1); // 첫 번째 컬럼 값 가져오기
+                }
+                System.out.println(sum);
+                return sum;
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
