@@ -8,6 +8,7 @@ import static DTO.movieDto.mdate;
 import static DTO.movieDto.umname;
 
 public class movieSelect {
+
     public Object[][] select() {
         String jdbcUrl = "jdbc:oracle:thin:@localhost:1521:XE"; // Oracle 데이터베이스 연결 URL
         String username = "JHJ3111";
