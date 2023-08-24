@@ -18,7 +18,7 @@ public class movieUpdate {
 
         try {
             Connection connection = DriverManager.getConnection(jdbcUrl, username, password);
-            String selectQuery = "update movie set name=?,mdate=?,grade=?,review=? where name=?";
+            String selectQuery = "update movie set name=?,mdate=TO_CHAR(TO_DATE(?, 'YYYY-MM-DD HH24:MI:SS'), 'YYMMDD'),grade=?,review=? where name=?";
             PreparedStatement statement = connection.prepareStatement(selectQuery);
             statement.setString(1, umname);
             statement.setString(2, umdate);
