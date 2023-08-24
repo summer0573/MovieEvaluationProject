@@ -1,9 +1,14 @@
 package movieGUIFrame;
 
 import DTO.movieDto;
+import database.movieDelete;
 import database.movieInsert;
+import database.movieSelect;
+import database.movieUpdate;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -15,6 +20,8 @@ import java.util.List;
 public class MainGUIFrame extends JFrame {
     ImageIcon img = new ImageIcon("src/img/Search_icon.png");
     movieDto d = new movieDto(); //dto getset
+
+    public static String duDate;
 
     public MainGUIFrame() {
         //Frame
@@ -89,11 +96,17 @@ public class MainGUIFrame extends JFrame {
         JButton searchBtn = new JButton(changeIcon); //검색버튼
         searchBtn.setBounds(880, 40, 50, 50);
 
-        JButton imformationBtn = new JButton("나의 영화 정보");
-        imformationBtn.setBounds(670, 480, 120, 50);
+        JButton updateBtn = new JButton("수정");
+        updateBtn.setBounds(540, 480, 100, 50);
 
-        JButton favoriteBtn = new JButton("나의 즐겨찾기");
-        favoriteBtn.setBounds(805, 480, 120, 50);
+        JButton deleteBtn = new JButton("삭제");
+        deleteBtn.setBounds(650, 480, 100, 50);
+
+        JButton imformationBtn = new JButton("관람정보");
+        imformationBtn.setBounds(760, 480, 100, 50);
+
+        JButton favoriteBtn = new JButton("즐겨찾기");
+        favoriteBtn.setBounds(870, 480, 100, 50);
 
         //-----------------------------------------------
 
@@ -161,43 +174,8 @@ public class MainGUIFrame extends JFrame {
 
         //-------------------select----------------------------
 
-        String jdbcUrl = "jdbc:oracle:thin:@localhost:1521:XE"; // Oracle 데이터베이스 연결 URL
-        String username = "HR";
-        String password = "5678";
-
-        List<Object[]> data = new ArrayList<>();
-
-        try {
-            Connection connection = DriverManager.getConnection(jdbcUrl, username, password);
-
-            String selectQuery = "SELECT * FROM MOVIE";
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(selectQuery);
-
-            while (resultSet.next()) {
-                String name = resultSet.getString("name");
-                String mdate = resultSet.getString("mdate");
-                String grade = resultSet.getString("grade");
-                String review = resultSet.getString("review");
-
-                Object[] row = {name, mdate, grade, review};
-                data.add(row);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        // 데이터를 2차원 배열로 변환
-        Object[][] dataArray = new Object[data.size()][];
-        data.toArray(dataArray);
-
-//        // 데이터 출력 (테스트용)
-//        for (Object[] row : dataArray) {
-//            for (Object value : row) {
-//                System.out.print(value + "\t");
-//            }
-//            System.out.println();
-//        }
+        movieSelect s = new movieSelect();
+        Object[][] dataArray = s.select();
 
         // 테이블 모델을 생성하고 isCellEditable을 재정의하여 특정 셀 수정 막기
         DefaultTableModel tableModel = new DefaultTableModel(dataArray, columnNames) {
@@ -208,13 +186,68 @@ public class MainGUIFrame extends JFrame {
             }
         };
 
-        //-----------------------------------------------
-
-        JTable movieTable = new JTable(tableModel);
+        JTable movieTable = new JTable(tableModel); //jtable에 tableModel 넣음
         JScrollPane movieScrollPane = new JScrollPane(movieTable);
         movieScrollPane.setBounds(505, 100, 470, 355);
 
+        // 행 선택 이벤트 리스너 등록
+        movieTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting()) {
+                    int selectedRow = movieTable.getSelectedRow();
+                    if (selectedRow != -1) {
+                        // 선택된 행의 데이터 출력
+//                        for (int i = 0; i < movieTable.getColumnCount(); i++) {
+                            System.out.print(movieTable.getValueAt(selectedRow, 0) + " ");
+                        duDate = (String) movieTable.getValueAt(selectedRow, 0);
+//                        }
+                        System.out.println(); // 줄 바꿈
+                    }
+                }
+                System.out.println("duDate : " + duDate);
+            }
+        });
+
+        deleteBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(duDate == null){
+                    JOptionPane.showMessageDialog(dframe, "삭제할 항목을 선택해주세요.", "알림", JOptionPane.WARNING_MESSAGE);
+                }
+                movieDelete d = new movieDelete();
+                try {
+                    d.delete(duDate);
+                    duDate = null;
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
+
+        updateBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(duDate == null){
+                    JOptionPane.showMessageDialog(dframe, "수정할 항목을 선택해주세요.", "알림", JOptionPane.WARNING_MESSAGE);
+                } else {
+                    new updateGUIFrame();
+                }
+//                movieUpdate u = new movieUpdate();
+//                try {
+//                    u.update(duDate);
+//                    duDate = null;
+//                } catch (SQLException ex) {
+//                    throw new RuntimeException(ex);
+//                }
+            }
+        });
+
+        //-----------------------------------------------
+
         selectMovie.add(select);
+        selectMovie.add(updateBtn);
+        selectMovie.add(deleteBtn);
         selectMovie.add(searchBtn);
         selectMovie.add(imformationBtn);
         selectMovie.add(favoriteBtn);

@@ -4,9 +4,8 @@ import java.sql.*;
 
 public class selectGroup {
     String jdbcUrl = "jdbc:oracle:thin:@localhost:1521:XE"; // Oracle 데이터베이스 연결 URL
-    String username = "HR";
-    String password = "5678";
-
+    String username = "JHJ3111";
+    String password = "3111";
     public String maxGroup() {
         int max = 0;
         String nameText = "";
@@ -61,7 +60,7 @@ public class selectGroup {
             Class.forName("oracle.jdbc.driver.OracleDriver");
             try {
                 Connection connection = DriverManager.getConnection(jdbcUrl, username, password);
-                PreparedStatement preparedStatement = connection.prepareStatement("SELECT AVG(grade) FROM movie");
+                PreparedStatement preparedStatement = connection.prepareStatement("SELECT round(AVG(grade), 2) FROM movie");
                 ResultSet resultSet = preparedStatement.executeQuery();
                 if (resultSet.next()) {
                     avg = resultSet.getDouble(1); // 첫 번째 컬럼 값 가져오기
