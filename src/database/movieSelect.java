@@ -4,6 +4,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static DTO.movieDto.mdate;
+import static DTO.movieDto.umname;
+
 public class movieSelect {
     public Object[][] select() {
         String jdbcUrl = "jdbc:oracle:thin:@localhost:1521:XE"; // Oracle 데이터베이스 연결 URL
@@ -15,13 +18,13 @@ public class movieSelect {
         try {
             Connection connection = DriverManager.getConnection(jdbcUrl, username, password);
 
-            String selectQuery = "SELECT * FROM MOVIE";
+            String selectQuery = "SELECT name, TO_CHAR(TO_DATE(mdate, 'YYYY-MM-DD'), 'YY-MM-DD') mmdate, grade, review FROM MOVIE";
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(selectQuery);
 
             while (resultSet.next()) { //date 리스트에 데이터베이스 테이블 값 넣기
                 String name = resultSet.getString("name");
-                String mdate = resultSet.getString("mdate");
+                String mdate = resultSet.getString("mmdate");
                 String grade = resultSet.getString("grade");
                 String review = resultSet.getString("review");
 

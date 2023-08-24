@@ -147,6 +147,7 @@ public class MainGUIFrame extends JFrame {
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }
+
             }
         });
 
