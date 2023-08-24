@@ -190,6 +190,8 @@ public class MainGUIFrame extends JFrame {
         JScrollPane movieScrollPane = new JScrollPane(movieTable);
         movieScrollPane.setBounds(505, 100, 470, 355);
 
+        String[] tableData = new String[4];
+
         // 행 선택 이벤트 리스너 등록
         movieTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
@@ -202,6 +204,11 @@ public class MainGUIFrame extends JFrame {
                             System.out.print(movieTable.getValueAt(selectedRow, 0) + " ");
                         duDate = (String) movieTable.getValueAt(selectedRow, 0);
 //                        }
+
+                        for (int i = 0; i < movieTable.getColumnCount(); i++) {
+                            tableData[i] = (String) movieTable.getValueAt(selectedRow, i);
+                            System.out.println(tableData[i]);
+                        }
                         System.out.println(); // 줄 바꿈
                     }
                 }
@@ -231,15 +238,9 @@ public class MainGUIFrame extends JFrame {
                 if(duDate == null){
                     JOptionPane.showMessageDialog(dframe, "수정할 항목을 선택해주세요.", "알림", JOptionPane.WARNING_MESSAGE);
                 } else {
-                    new updateGUIFrame();
+                    updateGUIFrame u = new updateGUIFrame();
+                    u.updateFrame(duDate, tableData);
                 }
-//                movieUpdate u = new movieUpdate();
-//                try {
-//                    u.update(duDate);
-//                    duDate = null;
-//                } catch (SQLException ex) {
-//                    throw new RuntimeException(ex);
-//                }
             }
         });
 
