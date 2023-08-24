@@ -232,6 +232,11 @@ public class MainGUIFrame extends JFrame {
         favoriteBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                try {
+                    new favoritMovieInsert();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
                 new favoriteGUIFrame();
                 frame.setVisible(false);
 
