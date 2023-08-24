@@ -1,10 +1,7 @@
 package movieGUIFrame;
 
 import DTO.movieDto;
-import database.movieDelete;
-import database.movieInsert;
-import database.movieSelect;
-import database.movieUpdate;
+import database.*;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -21,10 +18,13 @@ import java.util.List;
 public class MainGUIFrame extends JFrame {
 
     JTable movieTable;
+    JScrollPane movieScrollPane;
+    String stext;
     ImageIcon img = new ImageIcon("src/img/Search_icon.png");
     movieDto d = new movieDto(); //dto getset
 
     public static String duDate;
+    public static String duGrade;
 
     public MainGUIFrame() {
         //Frame
@@ -85,34 +85,6 @@ public class MainGUIFrame extends JFrame {
         dframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         dframe.setSize(300, 200);
 
-
-        //----------------------------selectpanel V
-
-        JTextField select = new JTextField();
-        select.setBounds(553, 40, 330, 50);
-
-        Image imgage = img.getImage();
-        // 창의 사이즈인 500,500에 맞춰서 이미지를 변경
-        Image changeImg = imgage.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
-        ImageIcon changeIcon = new ImageIcon(changeImg);
-
-        JButton searchBtn = new JButton(changeIcon); //검색버튼
-        searchBtn.setBounds(880, 40, 50, 50);
-
-        JButton updateBtn = new JButton("수정");
-        updateBtn.setBounds(540, 480, 100, 50);
-
-        JButton deleteBtn = new JButton("삭제");
-        deleteBtn.setBounds(650, 480, 100, 50);
-
-        JButton imformationBtn = new JButton("관람정보");
-        imformationBtn.setBounds(760, 480, 100, 50);
-
-        JButton favoriteBtn = new JButton("즐겨찾기");
-        favoriteBtn.setBounds(870, 480, 100, 50);
-
-        //-----------------------------------------------
-
         insertBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -153,17 +125,23 @@ public class MainGUIFrame extends JFrame {
 
             }
         });
+        //----------------------------selectpanel V
+
+        JButton updateBtn = new JButton("수정");
+        updateBtn.setBounds(540, 480, 100, 50);
+
+        JButton deleteBtn = new JButton("삭제");
+        deleteBtn.setBounds(650, 480, 100, 50);
+
+        JButton imformationBtn = new JButton("관람정보");
+        imformationBtn.setBounds(760, 480, 100, 50);
+
+        JButton favoriteBtn = new JButton("<html><body><center>즐겨찾기에" +
+                "<br>넣기</center></body></html>");
+        favoriteBtn.setBounds(870, 480, 100, 50);
 
 
-        favoriteBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                frame.setVisible(false);
-                new favoriteGUIFrame();
-
-            }
-        });
-
+        //-----------------------------------------------
         imformationBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -191,8 +169,8 @@ public class MainGUIFrame extends JFrame {
         };
 
         movieTable = new JTable(tableModel); //jtable에 tableModel 넣음
-        JScrollPane movieScrollPane = new JScrollPane(movieTable);
-        movieScrollPane.setBounds(505, 100, 470, 355);
+        movieScrollPane = new JScrollPane(movieTable);
+        movieScrollPane.setBounds(505, 40, 470, 410);
 
         String[] tableData = new String[4];
 
@@ -207,6 +185,7 @@ public class MainGUIFrame extends JFrame {
 //                        for (int i = 0; i < movieTable.getColumnCount(); i++) {
                             System.out.print(movieTable.getValueAt(selectedRow, 0) + " ");
                         duDate = (String) movieTable.getValueAt(selectedRow, 0);
+                        duGrade = (String) movieTable.getValueAt(selectedRow, 2);
 //                        }
 
                         for (int i = 0; i < movieTable.getColumnCount(); i++) {
@@ -217,6 +196,7 @@ public class MainGUIFrame extends JFrame {
                     }
                 }
                 System.out.println("duDate : " + duDate);
+                System.out.println("duGrade : " + duGrade);
             }
         });
 
@@ -248,23 +228,20 @@ public class MainGUIFrame extends JFrame {
             }
         });
 
-        searchBtn.addActionListener(new ActionListener() {
+
+        favoriteBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String stext = select.getText(); //title jfeild를 텍스트로 바꿈
-                System.out.println(stext);
-                if(stext.isEmpty()){
-                    JOptionPane.showMessageDialog(dframe, "검색어를 입력하세요", "알림", JOptionPane.WARNING_MESSAGE);
-                }
+                new favoriteGUIFrame();
+                frame.setVisible(false);
+
             }
         });
 
         //-----------------------------------------------
 
-        selectMovie.add(select);
         selectMovie.add(updateBtn);
         selectMovie.add(deleteBtn);
-        selectMovie.add(searchBtn);
         selectMovie.add(imformationBtn);
         selectMovie.add(favoriteBtn);
         selectMovie.add(movieScrollPane);
