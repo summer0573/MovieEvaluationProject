@@ -10,6 +10,7 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,6 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainGUIFrame extends JFrame {
+
+    JTable movieTable;
     ImageIcon img = new ImageIcon("src/img/Search_icon.png");
     movieDto d = new movieDto(); //dto getset
 
@@ -187,7 +190,7 @@ public class MainGUIFrame extends JFrame {
             }
         };
 
-        JTable movieTable = new JTable(tableModel); //jtable에 tableModel 넣음
+        movieTable = new JTable(tableModel); //jtable에 tableModel 넣음
         JScrollPane movieScrollPane = new JScrollPane(movieTable);
         movieScrollPane.setBounds(505, 100, 470, 355);
 
@@ -241,6 +244,17 @@ public class MainGUIFrame extends JFrame {
                 } else {
                     updateGUIFrame u = new updateGUIFrame();
                     u.updateFrame(duDate, tableData);
+                }
+            }
+        });
+
+        searchBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String stext = select.getText(); //title jfeild를 텍스트로 바꿈
+                System.out.println(stext);
+                if(stext.isEmpty()){
+                    JOptionPane.showMessageDialog(dframe, "검색어를 입력하세요", "알림", JOptionPane.WARNING_MESSAGE);
                 }
             }
         });
